@@ -20,6 +20,15 @@ model User {
   birthday  String?
   hosting   Listing[]   @relation("host")
   reserving Listing[] @relation("reservation")
+  cart CartItem[] @relation("cart")
+}
+
+model CartItem {
+  id String @id @default(uuid())
+  user User @relation("cart", fields: [userUsername], references: [username])
+  userUsername String
+  listing Listing @relation("listingCart", fields: [listingId], references: [id])
+  listingId String @unique
 }
 
 model Listing {
@@ -30,6 +39,9 @@ model Listing {
   location String
   client   User? @relation("reservation", fields: [clientUsername], references: [username])
   clientUsername String?
+  cart CartItem? @relation("listingCart")
+  cartId String
+  bookedDates String? 
 }
 
 model Review {
