@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import API from "../services/apiClient";
+import { Link } from "react-router-dom";
 function Listings() {
   return (
     <>
@@ -12,6 +14,15 @@ function Listings() {
 export default Listings;
 
 function ListingDisplay() {
+  const [listings, setListings] = useState(null);
+  useEffect(() => {
+    async function fetchLisings() {
+      const { data } = await API.fetchListings();
+      setListings(data);
+    }
+    fetchLisings();
+  }, []);
+  console.log(listings);
   return (
     <section>
       <div class="mx-auto max-w-screen-xl px-4 py-8">
@@ -24,23 +35,18 @@ function ListingDisplay() {
         </div>
 
         <div class="mt-8 grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4">
-          <ListingCard />
-          <ListingCard />
-          <ListingCard />
-          <ListingCard />
-          <ListingCard />
-          <ListingCard />
-          <ListingCard />
-          <ListingCard />
+          {listings?.map((listing, index) => {
+            return <ListingCard key={index} listing={listing} />;
+          })}
         </div>
       </div>
     </section>
   );
 }
-function ListingCard() {
+function ListingCard({ listing }) {
   return (
     <>
-      <a href="#" class="block">
+      <Link class="block" to={`/listing/${listing.id}/`}>
         <div class="flex justify-center">
           <strong class="relative h-6 bg-black px-4 text-xs uppercase leading-6 text-white">
             New
@@ -53,16 +59,14 @@ function ListingCard() {
           class="-mt-3 h-96 w-full object-cover"
         />
 
-        <h3 class="mt-4 text-sm text-black/90">
-          Camp location ( city, state )
-        </h3>
+        <h3 class="mt-4 text-sm text-black/90">{listing.location}</h3>
 
         <div class="mt-4 flex items-center justify-between font-bold">
           <p class="text-lg">$189.99 (price per night)</p>
 
           <p class="text-xs uppercase tracking-wide">⭐Rating</p>
         </div>
-      </a>
+      </Link>
     </>
   );
 }
