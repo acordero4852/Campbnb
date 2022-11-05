@@ -18,30 +18,18 @@ model User {
   password  String
   email     String @unique
   birthday  String?
-  hosting   Host[]   @relation("host")
-  reserving Client[] @relation("reservation")
-}
-
-model Host {
-  id           String    @id @default(uuid())
-  user         User      @relation("host", fields: [userUsername], references: [username])
-  userUsername String
-  listing      Listing[] @relation("listing")
+  hosting   Listing[]   @relation("host")
+  reserving Listing[] @relation("reservation")
 }
 
 model Listing {
   id       String @id @default(uuid())
-  host     Host   @relation("listing", fields: [hostId], references: [id])
-  hostId   String
-  client   Client @relation("client", fields: [clientId], references: [id])
-  clientId String
-}
-
-model Client {
-  id           String    @id @default(uuid())
-  user         User      @relation("reservation", fields: [userUsername], references: [username])
-  userUsername String
-  client       Listing[] @relation("client")
+  host     User   @relation("host", fields: [hostUsername], references: [username])
+  hostUsername   String
+  description String
+  location String
+  client   User? @relation("reservation", fields: [clientUsername], references: [username])
+  clientUsername String?
 }
 
 model Review {

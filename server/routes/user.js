@@ -5,7 +5,12 @@ const { excludePassword } = require("../utils/users");
 
 router.get("/", async (req, res) => {
   try {
-    const users = await prisma.user.findMany({});
+    const users = await prisma.user.findMany({
+      include: {
+        hosting: true,
+        reserving: true,
+      },
+    });
     for (const user in users) {
       excludePassword(users[user], "password");
     }
