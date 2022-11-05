@@ -25,7 +25,8 @@ router.get("/:listingid", async (req, res) => {
     console.log(error);
   }
 });
-router.get("/:username", async (req, res) => {
+
+router.get("/host/:username", async (req, res) => {
   try {
     const { username } = req.params;
     const listings = await prisma.listing.findMany({
